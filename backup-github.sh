@@ -5,12 +5,12 @@
 # returned by GitHub one page at a time, as described at https://gist.github.com/darktim/5582423
 
 GHBU_BACKUP_DIR=${GHBU_BACKUP_DIR-"github-backups"}                  # where to place the backup files
-GHBU_ORG=${GHBU_ORG-"<CHANGE-ME>"}                                   # the GitHub organization whose repos will be backed up
+GHBU_ORG=${GHBU_ORG-"LTW-GCR-CSOC"}                                  # the GitHub organization whose repos will be backed up
                                                                      # (if you're backing up a user's repos instead, this should be your GitHub username)
-GHBU_UNAME=${GHBU_UNAME-"<CHANGE-ME>"}                               # the username of a GitHub account (to use with the GitHub API)
+GHBU_UNAME=${GHBU_UNAME-"GCR"}                                       # the username of a GitHub account (to use with the GitHub API)
 GHBU_PASSWD=${GHBU_PASSWD-"<CHANGE-ME>"}                             # the password for that account 
 GHBU_GITHOST=${GHBU_GITHOST-"github.com"}                            # the GitHub hostname (see comments)
-GHBU_PRUNE_OLD=${GHBU_PRUNE_OLD-true}                                # when `true`, old backups will be deleted
+GHBU_PRUNE_OLD=${GHBU_PRUNE_OLD-false}                               # when `true`, old backups will be deleted
 GHBU_PRUNE_AFTER_N_DAYS=${GHBU_PRUNE_AFTER_N_DAYS-3}                 # the min age (in days) of backup files to delete
 GHBU_SILENT=${GHBU_SILENT-false}                                     # when `true`, only show error messages 
 GHBU_API=${GHBU_API-"https://api.github.com"}                        # base URI for the GitHub API
@@ -43,9 +43,9 @@ check mkdir -p $GHBU_BACKUP_DIR
 
 $GHBU_SILENT || echo -n "Fetching list of repositories for ${GHBU_ORG}..."
 
-REPOLIST=`check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/orgs/${GHBU_ORG}/repos\?per_page=100 -q | check grep "\"name\"" | check awk -F': "' '{print $2}' | check sed -e 's/",//g'`
+# REPOLIST=`check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/orgs/${GHBU_ORG}/repos\?per_page=100 -q | check grep "\"name\"" | check awk -F': "' '{print $2}' | check sed -e 's/",//g'`
 # NOTE: if you're backing up a *user's* repos, not an organizations, use this instead:
-# REPOLIST=`check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/user/repos -q | check grep "\"name\"" | check awk -F': "' '{print $2}' | check sed -e 's/",//g'`
+REPOLIST=`check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/user/repos -q | check grep "\"name\"" | check awk -F': "' '{print $2}' | check sed -e 's/",//g'`
 
 $GHBU_SILENT || echo "found `echo $REPOLIST | wc -w` repositories."
 
