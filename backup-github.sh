@@ -7,7 +7,7 @@
 GHBU_BACKUP_DIR=${GHBU_BACKUP_DIR-"github-backups"}                  # where to place the backup files
 GHBU_ORG=${GHBU_ORG-"LTW-GCR-CSOC"}                                  # the GitHub organization whose repos will be backed up
                                                                      # (if you're backing up a user's repos instead, this should be your GitHub username)
-GHBU_UNAME=${GHBU_UNAME-"GCR"}                                       # the username of a GitHub account (to use with the GitHub API)
+GHBU_UNAME=${GHBU_UNAME-"CUGCR"}                                       # the username of a GitHub account (to use with the GitHub API)
 GHBU_PASSWD=${GHBU_PASSWD-"<CHANGE-ME>"}                             # the password for that account 
 GHBU_GITHOST=${GHBU_GITHOST-"github.com"}                            # the GitHub hostname (see comments)
 GHBU_PRUNE_OLD=${GHBU_PRUNE_OLD-false}                               # when `true`, old backups will be deleted
@@ -45,7 +45,6 @@ $GHBU_SILENT || echo -n "Fetching list of repositories for ${GHBU_ORG}..."
 
 REPOLIST=`check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/orgs/${GHBU_ORG}/repos\?per_page=100 -q | check grep "\"name\"" | check awk -F': "' '{print $2}' | check sed -e 's/",//g'`
 # NOTE: if you're backing up a *user's* repos, not an organizations, use this instead:
-# REPOLIST=`check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/user/repos -q | check grep "\"name\"" | check awk -F': "' '{print $2}' | check sed -e 's/",//g'`
 # REPOLIST=`check curl --silent -u $GHBU_UNAME:$GHBU_PASSWD ${GHBU_API}/user/repos -q | check grep "\"name\"" | check awk -F': "' '{print $2}' | check sed -e 's/",//g'`
 
 $GHBU_SILENT || echo "found `echo $REPOLIST | wc -w` repositories."
